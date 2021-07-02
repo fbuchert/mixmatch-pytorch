@@ -14,7 +14,7 @@ from torch.utils.tensorboard import SummaryWriter
 
 from eval import evaluate
 from augmentation.augmentations import get_weak_augmentation, get_normalizer
-from datasets.config import NORMALIZATION_VARIABLES, IMG_SIZE
+from datasets.config import IMG_SIZE
 from utils.train import EMA, apply_wd, linear_rampup, set_bn_running_updates
 from utils.eval import AverageMeterSet
 from utils.metrics import write_metrics
@@ -89,13 +89,13 @@ class MixMatchTransform:
             Function returns instance of MixMatchTransform based on given inputs.
         """
         return cls(
-            transform=transforms.Compose(
+            transforms.Compose(
                 [
                     get_weak_augmentation(img_size, padding),
                     get_normalizer(dataset)
                 ]
             ),
-            k=k,
+            k
         )
 
 
@@ -399,10 +399,10 @@ def mixup(all_inputs: torch.Tensor, all_targets: torch.Tensor, alpha: float):
     mixed_targets: torch.Tensor
         Tensor containing the mixed labels of samples in mixed_inputs
     """
-    mixup_lambda = np.random.beta(alpha, alpha, size=all_inputs.size(0))
+    mixup_lambda = np.random.beta(alpha, alpha, size=all_inputs.size()[0])
     mixup_lambda = torch.tensor(np.maximum(mixup_lambda, 1 - mixup_lambda), dtype=torch.float32).to(all_inputs.device)
 
-    idx = torch.randperm(all_inputs.size(0))
+    idx = torch.randperm(all_inputs.size()[0])
 
     original_input, shuffled_input = all_inputs, all_inputs[idx]
     original_targets, shuffled_targets = all_targets, all_targets[idx]
