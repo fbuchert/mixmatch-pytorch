@@ -2,7 +2,7 @@ import os
 import logging
 from tqdm import tqdm
 from PIL import Image
-from typing import Callable, Tuple
+from typing import Callable, Tuple, List
 
 import numpy as np
 import torch
@@ -312,11 +312,15 @@ def train(
 
 def interleave_offsets(batch_size: int, nu: int):
     """
+    Method computing offsets that are used to interleave batches in MixMatch.
     Parameters
     ----------
 
     Returns
     -------
+    offsets: List
+        List of length (nu+1), which specifies offsets used for interleaving batches. For example, offsets in MixMatch
+        are of length 4 and in the default confguration are given by [0, 21, 42, 64].
     """
     groups = [batch_size // (nu + 1)] * (nu + 1)
     for x in range(batch_size - sum(groups)):
@@ -328,16 +332,46 @@ def interleave_offsets(batch_size: int, nu: int):
     return offsets
 
 
-def interleave(xy, batch):
+def interleave(xy: List, batch_size: int):
     """
+    Reference: https://github.com/google-research/mixmatch
+    Method that interleaves both labeled and unlabeled batches. This is necessary to ensure that the BatchNorm update,
+    which is only performed once per iteration for the first batch in xy (see lines 531-533), is representative
+    of the entire dataset.
+
+    If xy contains three tensors x (x_0:x_5), y (y_0:y_5) and z (z_0:z_5) with a batch size of 6, the offset
+    List will be [0, 2, 4, 6]. Interleave will then perform the following substitutions:
+        - elements x_0:x_1 (offsets[0]:offsets[1]) will remain unchanged
+        - elements x_2:x_3 (offsets[1]:offsets[2]) will be exchanged with y_2:y_3
+        - elements x_4:x_5 (offsets[2]:offsets[4]) will be exchanged with z_4:z_5
+
+    This is also illustrated in the following:
+        x_0 , y_0 , z_0               x_0 , y_0 , z_0
+        x_1 , y_1 , z_1               x_1 , y_1 , z_1
+        x_2 , y_2 , z_2    ---- >     y_2 , x_2 , z_2
+        x_3 , y_3 , z_3    ---- >     y_3 , x_3 , z_3
+        x_4 , y_4 , z_4               z_4 , y_4 , x_4
+        x_5 , y_5 , z_5               z_5 , y_5 , x_5
+
+    This ensures that the first tensor of the returned list, i.e. [x_0, x_1, y_2, y_3, z_4, z_5] contains images that
+    represent the entire data distribution in order to perform the correct BatchNorm update at every iteration.
+
+    The same method can then be used to reverse the substitutions after all batches have been passed through the model.
+
     Parameters
     ----------
-
+    xy: List[torch.Tensor]
+        List of tensors which should be interleaved. In MixMatch this list is generally of length 3:
+        [labeled_batch (NxCxHxW), unlabeled_batch_aug_1 (NxCxHxW), unlabeled_batch_aug_2 (NxCxHxW)].
+    batch_size: int
+        Batch size, i.e. first tensor dimension, of the tensors in the list xy
     Returns
     -------
+    interleaved: List
+        List of interleaved tensors as described above.
     """
     nu = len(xy) - 1
-    offsets = interleave_offsets(batch, nu)
+    offsets = interleave_offsets(batch_size, nu)
     xy = [[v[offsets[p]: offsets[p + 1]] for p in range(nu + 1)] for v in xy]
     for i in range(1, nu + 1):
         xy[0][i], xy[i][i] = xy[i][i], xy[0][i]

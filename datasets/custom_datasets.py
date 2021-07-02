@@ -139,8 +139,6 @@ class Caltech(Dataset):
             Name of dataset folder in which the Caltech dataset is contained. The dataset folder has to be at the path
             specified by `root`.
         """
-        if type(self) is Caltech:
-            raise TypeError("Only Caltech101 or Caltech256, i.e. not the the Caltech base class, should be instantiated.")
         self.root = root
         self.train = train
         self.train_split = train_split_pct

@@ -121,9 +121,9 @@ def parse_args():
         help="Manually set seed for random number generators",
     )
     parser.add_argument(
-        "--train-val-split",
-        type=float,
-        default=1.0,
+        "--num-validation",
+        type=int,
+        default=1,
         help="Defines percentage used for training and validation",
     )
     parser.add_argument(

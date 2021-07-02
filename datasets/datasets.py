@@ -159,8 +159,7 @@ def sample_stl10_ssl_indices(
         stl10_labeled,
         split_num=len(stl10_labeled)-num_validation
     )
-    train_labeled_targets = np.array(stl10_labeled)[train_indices]
-    labeled_idx, unlabeled_idx = get_uniform_split(train_labeled_targets, train_indices, split_num=num_labeled)
+    labeled_idx, unlabeled_idx = get_uniform_split(base_labeled_targets, train_indices, split_num=num_labeled)
     validation_indices = np.array(stl10_labeled)[validation_indices].tolist()
     labeled_indices = np.array(stl10_labeled)[labeled_idx].tolist()
     unlabeled_indices = (
@@ -203,8 +202,8 @@ def get_uniform_split(targets: List, indices: List, split_pct: float = None, spl
 
     split0_indices, split1_indices = [], []
     for class_label in np.unique(targets):
-        class_indices = np.where(np.array(targets) == class_label)[0]
-        np.random.shuffle(indices)
+        class_indices = np.where(np.array(targets)[indices] == class_label)[0]
+        np.random.shuffle(class_indices)
         split0_indices += list(class_indices[:samples_per_class])
         split1_indices += list(class_indices[samples_per_class:])
     split0_indices = np.array(indices)[split0_indices].tolist()
@@ -214,6 +213,6 @@ def get_uniform_split(targets: List, indices: List, split_pct: float = None, spl
     # If this is not the case, randomly sample indices from split1 and add them to split0
     if split_num is not None and len(split0_indices) < split_num:
         tmp_indices = random.sample(split1_indices, split_num - len(split0_indices))
-        split0_indices += np.setdiff1d(split1_indices, tmp_indices).tolist()
-        split1_indices = tmp_indices
+        split0_indices += tmp_indices
+        split1_indices = np.setdiff1d(split1_indices, tmp_indices).tolist()
     return split0_indices, split1_indices

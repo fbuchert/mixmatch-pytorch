@@ -43,7 +43,7 @@ def get_sampler(
     if reweighted:
         return get_reweighted_sampler(dataset.targets, num_samples, replacement, median_freq)
     else:
-        return get_uniform_sampler(dataset, num_samples, replacement)
+        return get_uniform_sampler(dataset, replacement, num_samples)
 
 
 def get_uniform_sampler(dataset: Dataset, replacement: bool = False, num_samples: int = None):

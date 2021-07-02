@@ -1,6 +1,6 @@
 import math
 from itertools import product
-from typing import Tuple, List, Optional
+from typing import Tuple, List, Optional, Union
 
 import numpy as np
 import torch
@@ -215,7 +215,7 @@ class ModelWrapper:
     def cuda(self):
         self.task_model.cuda()
 
-    def to(self, device: Optional[str, torch.device]):
+    def to(self, device: Union[str, torch.device]):
         self.task_model.to(device)
 
     def get_embedding_dim(self):

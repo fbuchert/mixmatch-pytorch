@@ -48,7 +48,8 @@ def evaluate(
     pred_labels = []
     true_labels = []
 
-    p_bar = tqdm(range(len(eval_loader)))
+    if args.pbar:
+        p_bar = tqdm(range(len(eval_loader)))
     with torch.no_grad():
         for i, (inputs, targets) in enumerate(eval_loader):
             size = len(targets)
@@ -82,7 +83,8 @@ def evaluate(
                     )
                 )
                 p_bar.update()
-    p_bar.close()
+    if args.pbar:
+        p_bar.close()
     logger.info(
         " * Prec@1 {top1.avg:.3f}\tPrec@5 {top5.avg:.3f}".format(
             top1=meters["top1"], top5=meters["top5"]

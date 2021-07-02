@@ -40,12 +40,11 @@ def main(args, save_path: str):
         args.data_dir,
         args.dataset,
         args.num_labeled,
-        args.is_pct_labeled,
+        args.num_validation,
         transform_dict["train"],
         transform_dict["train_unlabeled"],
         transform_dict["test"],
-        dataset_indices=initial_indices,
-        train_val_split=args.train_val_split,
+        dataset_indices=initial_indices
     )
     save_dataset_indices(save_path, train_sets, validation_set)
 
