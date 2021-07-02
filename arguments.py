@@ -121,12 +121,6 @@ def parse_args():
         help="Manually set seed for random number generators",
     )
     parser.add_argument(
-        "--num-validation",
-        type=int,
-        default=1,
-        help="Defines percentage used for training and validation",
-    )
-    parser.add_argument(
         "--trainable-layers",
         type=str,
         nargs='+',
@@ -182,18 +176,25 @@ def parse_args():
         "--pbar", dest="pbar", action="store_true", default=False, help="print progress bar"
     )
 
-    # MixMatch arguments
+    # Dataset split settings
     parser.add_argument("--initial-indices", type=str, help='path to initial indice file to start from')
     parser.add_argument(
         "--num-labeled", default=250, type=float, help="number of labeled samples *per class* for SSL"
     )
-    parser.add_argument("--is-pct-labeled", dest="is_pct_labeled", action="store_true", default=False, help='specifies if --num-labeled is given in percent or as an absolute number')
     parser.add_argument(
-        "--mu", default=7, type=int, help="coefficient of unlabeled batch size"
+        "--num-validation",
+        type=int,
+        default=1,
+        help="Defines percentage used for training and validation",
+    )
+
+    # MixMatch arguments
+    parser.add_argument(
+        "--mu", default=1, type=int, help="coefficient of unlabeled batch size"
     )
     parser.add_argument(
         "--wu",
-        default=1,
+        default=75,
         type=float,
         help="Weight of unlabeled loss (all SSL algorithms) ",
     )
