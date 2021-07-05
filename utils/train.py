@@ -59,14 +59,14 @@ def apply_wd(model: torch.nn.Module, wd: float, param_names: List = ["conv", "fc
 
     Parameters
     ----------
-    wd_tuple: Tuple
-        Tuple which contains the phrases which are checked for, e.g. (`conv`, `weight`) or (`fc`, `weight`)
-    name: str
-        Name of parameter as saved in state dict, e.g. `conv1.weight`
-    Returns
-    ----------
-    wd_check: bool
-        Returns a bool indicating whether all strings in wd_tuple are contained in name.
+    model: torch.nn.Module
+        Model to which weight decay is applied
+    wd: float
+        Float specifying weight decay. Parameters are updated to: param = (1-wd) * param
+    param_names: List (default: ["conv", "fc"])
+        Parameter names (or substring of names) for which the weight decay is applied.
+    types: List (default: ["weight"])
+        Parameter types for which weight decay is applied.
     """
     with torch.no_grad():
         for name, param in model.state_dict().items():
@@ -221,10 +221,6 @@ class ModelWrapper:
     def get_embedding_dim(self):
         last_layer = list(self.task_model.modules())[-1]
         return last_layer.in_features
-
-
-def cosine_lr_decay(k: int, total_steps: int):
-    return max(0.0, math.cos(math.pi * 7 * k / (16 * total_steps)))
 
 
 def linear_rampup(current: int, rampup_length: int):

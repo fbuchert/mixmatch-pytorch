@@ -187,6 +187,7 @@ def train(
         SummaryWriter instance which is used to write losses as well as training / evaluation metrics
         to tensorboard summary file.
     """
+    save_path = kwargs.get("save_path", args.out_dir)
     model.to(args.device)
 
     if args.use_ema:
@@ -246,7 +247,6 @@ def train(
         # Only save best model (based on validation accuracy) if validation set is sufficiently large
         # MixMatch does not use a validation set by default - so this will usually not be saved.
         if val_metrics.top1 > best_acc and args.save and len(validation_loader.dataset) > MIN_VALIDATION_SIZE:
-            save_path = kwargs.get("save_path", args.out_dir)
             save_state(
                 epoch,
                 model,
@@ -261,10 +261,6 @@ def train(
 
         # Save checkpoints during model training at a fixed interval specified by args.checkpoint_interval
         if epoch % args.checkpoint_interval == 0 and args.save:
-            save_path = kwargs.get("save_path", args.out_dir)
-            old_checkpoint_files = list(
-                filter(lambda x: "checkpoint" in x, os.listdir(save_path))
-            )
             save_state(
                 epoch,
                 model,
@@ -276,10 +272,6 @@ def train(
                 filename=f"checkpoint_{epoch}.tar",
             )
 
-            # Delete old checkpoint files in order to save space
-            for file in old_checkpoint_files:
-                os.remove(os.path.join(save_path, file))
-
     writer.close()
     logger.info(
         "Finished MixMatch training: Validation: Acc@1 {val_acc1:.3f}\tAcc@5 {val_acc5:.3f}\t Test: Acc@1 {test_acc1:.3f} Acc@5 {test_acc5:.3f}".format(
@@ -289,13 +281,6 @@ def train(
             test_acc5=val_metrics.top5,
         )
     )
-    save_path = kwargs.get("save_path", args.out_dir)
-    if args.save:
-        old_checkpoint_files = list(
-            filter(lambda x: "checkpoint" in x, os.listdir(save_path))
-        )
-        for file in old_checkpoint_files:
-            os.remove(os.path.join(save_path, file))
 
     save_state(
         epoch,

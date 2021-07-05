@@ -198,7 +198,7 @@ class Caltech(Dataset):
 
         Parameters
         ----------
-        idx: int
+        index: int
             Get item at index idx of STL10.
         Returns
         ----------
@@ -278,6 +278,9 @@ class STL10(datasets.STL10):
 
 
 class HAM10000(Dataset):
+    """
+    HAM10000 is a class that implements the HAM10000 dataset, a well-known skin cancer dataset.
+    """
     def __init__(
         self,
         root: str,
