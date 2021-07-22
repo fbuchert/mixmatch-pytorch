@@ -416,7 +416,7 @@ def train_epoch(
     args: argparse.Namespace
         Namespace with command line arguments and corresponding values
     model: torch.nn.Module
-        The method returns the trained model
+        Model, i.e. neural network to train using MixMatch.
     ema_model: EMA
         The EMA class which maintains an exponential moving average of model parameters. In MixMatch the exponential
         moving average parameters are used for model evaluation and for the reported results.
@@ -489,7 +489,7 @@ def train_step(args, model: torch.nn.Module, batch: Tuple, meters: AverageMeterS
     args: argparse.Namespace
         Namespace with command line arguments and corresponding values
     model: torch.nn.Module
-        The method returns the trained model
+        Model, i.e. neural network to train using MixMatch.
     batch: Tuple
         Tuple containing loaded objects from both labeled and unlabeled data loaders. Each object is another tuple
         containing samples and targets (only of labeled batch).
