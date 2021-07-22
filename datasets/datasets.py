@@ -1,12 +1,11 @@
 import random
 from typing import List, Tuple, Callable
 
-from torchvision import transforms
+from torchvision import transforms, datasets
 from torch.utils.data import Dataset
 
 from datasets.config import *
 from datasets.custom_datasets import *
-
 
 DATASET_GETTERS = {
     "cifar10": datasets.CIFAR10,
