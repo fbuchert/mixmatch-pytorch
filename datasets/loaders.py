@@ -139,7 +139,7 @@ def create_loaders(
     mu: int (default: 1)
         Multiplication factor which is used to compute the batch_size for the unlabeled train dataset. In MixMatch
         this factor is set to 1, i.e. at every iteration the same number of samples is loaded from the labeled and
-        the unlabeled train datasets. In FixMatch this factor is set to 7.
+        the unlabeled train datasets.
     total_iters: int (default: None)
         total_iters specifies the total number of desired training iterations per epoch. If not None,
         the product of total_iters and batch_size is used to compute the total number of samples used for training

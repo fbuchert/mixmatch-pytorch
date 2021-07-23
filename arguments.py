@@ -39,14 +39,14 @@ def parse_args():
     )
     parser.add_argument(
         "--device",
-        default="cpu",
+        default="cuda",
         type=str,
         choices=["cpu", "cuda"],
         help="Device used for training",
     )
     parser.add_argument(
         "--num-workers",
-        default=4,
+        default=0,
         type=int,
         help="Number of workers used for data loading",
     )
@@ -88,9 +88,9 @@ def parse_args():
         type=int,
         help="number of iterations per epoch",
     )
-    parser.add_argument("--batch-size", default=16, type=int, help="batch_size")
-    parser.add_argument("--lr", default=0.03, type=float, help="initial learning rate")
-    parser.add_argument("--wd", default=0.0005, type=float, help="weight decay")
+    parser.add_argument("--batch-size", default=64, type=int, help="batch_size")
+    parser.add_argument("--lr", default=0.002, type=float, help="initial learning rate")
+    parser.add_argument("--wd", default=0.00004, type=float, help="weight decay")
     parser.add_argument(
         "--ema-decay",
         default=0.999,
@@ -101,12 +101,6 @@ def parse_args():
         "--pin-memory",
         action="store_true",
         help="Should CPU tensors be directly allocated in Pinned memory for data loading",
-    )
-    parser.add_argument(
-        "--initial-size",
-        type=int,
-        default=500,
-        help="Number of initially labeled samples",
     )
     parser.add_argument(
         "--checkpoint-interval",
@@ -205,14 +199,8 @@ def parse_args():
         help="number of augmentations used for strong aug.",
     )
     parser.add_argument(
-        "--m",
-        default=10,
-        type=int,
-        help="magnitude of randaugment (strong augmentation)",
-    )
-    parser.add_argument(
         "--temperature",
-        default=0.95,
+        default=0.5,
         type=float,
         help="Temperature for sharpening pseudo-labels",
     )
