@@ -115,9 +115,9 @@ def evaluate(
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='FixMatch evaluation')
+    parser = argparse.ArgumentParser(description='MixMatch evaluation')
 
-    parser.add_argument('--run-path', type=str, help='path to FixMatch run which should be evaluated.')
+    parser.add_argument('--run-path', type=str, help='path to MixMatch run which should be evaluated.')
     parser.add_argument('--data-dir', default='./data', type=str, help='path to directory where datasets are saved.')
     parser.add_argument('--checkpoint-file', default='', type=str, help='name of .tar-checkpoint file from which model is loaded for evaluation.')
     parser.add_argument('--device', default='cpu', type=str, choices=['cpu', 'gpu'], help='device (cpu / cuda) on which evaluation is run.')
