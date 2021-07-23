@@ -23,9 +23,9 @@ conda install --file requirements.txt
 ```
 
 ## Training
-MixMatch training (default configuration) is started by running the following command:
+MixMatch training (default configuration) is started by running the following command (`--pbar` to show progress bar during training):
 ```
-python main.py
+python main.py --pbar
 ```
 
 ### Configuration
@@ -67,7 +67,12 @@ tensorboard --logdir <result_folder>
 This starts a tensorboard instance at `localhost:6006`, which can be opened in any common browser.
 
 ## Evaluation
-
+A trained MixMatch model can be evaluated by running:
+```
+ python3 eval.py --run-path out/mixmatch_training/run_0 --pbar --device <cuda / cpu>
+```
+where `--run-path` specifies the path at which the run to be evaluated is saved. Alternatively, one can also check all
+metrics over all epochs using the tensorboard file.
 
 ## References
 ```
