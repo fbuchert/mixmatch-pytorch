@@ -7,7 +7,7 @@ google-auth-oauthlib==0.4.4
 grpcio==1.39.0
 hestia==0.6.0
 idna==3.2
-Jinja2==2.10.3
+Jinja2==2.11.3
 joblib==1.0.1
 Markdown==3.3.4
 MarkupSafe==2.0.1
