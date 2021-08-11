@@ -1,4 +1,6 @@
 # PyTorch Implementation: MixMatch
+![License](https://img.shields.io/github/license/fbuchert/mixmatch-pytorch?label=license)
+
 PyTorch implementation of [MixMatch: Simplifying Semi-Supervised Learning with Consistency and Confidence
 ](https://arxiv.org/abs/1905.02249) based on the [official tensorflow implementation](https://github.com/google-research/mixmatch).
 
